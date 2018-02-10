@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="main">
+	<head>
+		<link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+		
+		<script src="node_modules/angular/angular.js"></script> 
+
+		<script src="js/main.js"></script> 
+		<script src="js/services/service-artistas.js"></script> 
+		<script src="js/services/service-musicas.js"></script>
+		<script src="js/services/service-clientes.js"></script>
+		<script src="js/services/service-playlists.js"></script>
+
+		<script src="js/controllers/clientes-ctrl.js"></script>
+		<script src="js/controllers/artistas-ctrl.js"></script> 
+		<script src="js/controllers/musicas-ctrl.js"></script> 
+		<script src="js/controllers/playlists-ctrl.js"></script> 
+	</head>
+	
+	<body >
+		<header>
+			<div class="jumbotron">
+				<h1 class="titulo">LAB 03</h1>
+			</div>
+		</header>
+		<div ng-controller="clientes-ctrl">
+			<form name="clienteForm" class="form">
+				<h3>Cadastre-se como Usuário:</h3>
+				<h4 ng-show="!clienteCampoNaoVazio(clienteForm.email)">O botão só será habilitado com um email não vazio.
+				<h4 ng-show="emailRepetido(clienteForm.email)">O botão só será habilitado com um email distinto dos demais cadastrados.</h4>
+				<h4 ng-show="!clienteCampoNaoVazio(clienteForm.nome)">O botão só será habilitado com um nome não vazio.
+				<h4 ng-show="!clienteCampoNaoVazio(clienteForm.senha)">O botão só será habilitado com uma senha não vazia.</h4>	
+				<input class="form-control" type="text" ng-model="clienteForm.email" placeholder="Insira um email válido">
+				<input class="form-control" type="text" ng-model="clienteForm.nome" placeholder="Insira um nome de usuário">
+				<input class="form-control" type="text" ng-model="clienteForm.senha" placeholder="Insira sua senha">
+				<button class="btn btn-primary" ng-disabled="!habilitaBotaoClienteForm(clienteForm.email, clienteForm.nome, clienteForm.senha)" ng-click="addCliente(clienteForm)">Cadastrar Usuário</button>
+			</form>
+
+			<form name="loginForm" class="form">
+				<h3>Logar-se como Usuário:</h3>
+				<h4 ng-show="!clienteCampoNaoVazio(loginForm.email)">O botão só será habilitado com um email não vazio.
+				<h4 ng-show="!clienteCampoNaoVazio(loginForm.senha)">O botão só será habilitado com uma senha não vazia.</h4>	
+				<input class="form-control" type="text" ng-model="loginForm.email" placeholder="Insira seu email">
+				<input class="form-control" type="text" ng-model="loginForm.senha" placeholder="Insira sua senha">
+				<button class="btn btn-primary" ng-disabled="!habilitaBotaoLoginForm(loginForm.email, loginForm.senha)" ng-click="logarCliente(loginForm)">Logar Usuário</button>
+			</form>
+		
+			<div ng-controller="artistas-ctrl">			
+				<input ng-show="artistas.length > 0" class="form form-control" type="text" ng-model="filtroArtistas" placeholder="Filtre os artistas pelo nome">
+				<table ng-show="artistas.length > 0" class="table">
+		            <tr class="cabecalho">
+		                <th>Notas:</th>
+		                <th>Favoritado:</th>
+		                <th>Imagem:</th>
+		                <th>Nome do Artista:</th>
+		                <th>Albuns:</th>
+		                <th>Recentemente:</th>
+		            </tr>
+		            <tr class="artista" ng-class="{'selecionado': artista.favoritado}" ng-repeat="artista in artistas | filter: filtroArtistas">
+		                <td><input class="form-control" type="text" ng-model="artista.nota" placeholder="Nota"></td>
+		                <td><input class="artistaFavoritado" type="checkbox" ng-model="artista.favoritado" ng-click="favoritar(artista)"/></td>
+		                <td><img ng-src="{{artista.url}}"></td>
+		                <td>{{artista.nome}}</td>
+		                <td>
+		                	<ul ng-repeat="album in artista.albuns">
+		                		<li>{{album.nome}}</li>
+		                	</ul>
+		                </td> 
+		                <td>
+		                	<select class="form-control" ng-model="artista.recente" >
+		                		<option value="">Selecione uma música</option>
+		                		<option ng-repeat="musica in artista.musicasRecentes">{{musica.nome}}</option>
+		            		</select>
+		                </td>
+
+		            </tr>
+
+		         </table>
+				<form name="artistaForm" class="form">
+					<h3>Adicione um Artista:</h3>
+					<h4 ng-show="!artistaNomeNaoVazio(artistaForm.nome)">O botão só será habilitado com um nome não vazio.</h4>
+					<h4 ng-show="artistaRepetido(artistaForm.nome)">O botão só será habilitado com um nome distinto dos demais artistas.</h4>
+					<input class="form-control" type="text" ng-model="artistaForm.nome" placeholder="Insira o nome do artista">
+					<input class="form-control" type="text" ng-model="artistaForm.url" placeholder="Insira uma url com a foto do artista">
+					<button class="btn btn-primary" ng-disabled="!habilitaBotaoArtistaForm(artistaForm.nome)" ng-click="addArtista(artistaForm)">Adicionar Artista</button>
+				</form>
+			
+				<div ng-controller="musicas-ctrl">
+					<table ng-show="musicas.length > 0" class="table">
+						<tr class="cabecalho">
+			                <th>Nome da Música:</th>
+			                <th>Artista:</th>
+			                <th>Álbum:</th>
+			                <th>Lançamento:</th>
+			                <th>Duração:</th>
+			            </tr>
+			            <tr ng-repeat="musica in musicas">
+			                <td>{{musica.nome}}</td>
+			                <td>{{musica.artista}}</td>
+			                <td>{{musica.album}}</td>
+			                <td>{{musica.lancamento}}</td>
+			                <td>{{musica.duracao}}</td>
+			            </tr>
+			         </table>
+
+					<form name="musicaForm" class="form">
+						<h3>Adicione uma Música:</h3>
+						<h4 ng-show="!musicaNomeNaoVazio(musicaForm.nome)">O botão só será habilitado com um nome não vazio.</h4>
+						<h4 ng-show="musicaNomeRepetido(musicaForm.nome)">O botão só será habilitado com um nome distinto dos demais</h4>
+					    <input class="form-control" type="text" ng-model="musicaForm.nome" placeholder="Insira o nome da música">
+						
+						<h4 ng-show="!musicaArtistaNaoVazio(musicaForm.artista)">O artista já deve estar cadastrado</h4>
+						<select class="form-control" ng-model="musicaForm.artista" ng-required="true">
+		                	<option value="">Selecione um artista</option>
+		                	<option ng-repeat="artista in artistas">{{artista.nome}}</option>
+		            	</select>
+		            	
+		            	<h4 ng-show="!musicaAlbumNaoVazio(musicaForm.album)">O álbum não deve ser vazio.</h4>
+						<input class="form-control" type="text" ng-model="musicaForm.album" placeholder="Insira o nome do álbum">
+						
+						<h4 ng-show="!musicaLancamentoNaoVazio(musicaForm.lancamento)">O lançamento não deve ser vazio.</h4>
+						<input class="form-control" type="text" ng-model="musicaForm.lancamento" placeholder="Insira o ano de lancamento">
+						
+						<h4 ng-show="!musicaDuracaoNaoVazio(musicaForm.duracao)">A duração não deve ser vazia.</h4>
+						<input class="form-control" type="text" ng-model="musicaForm.duracao" placeholder="Insira a duração da música">
+						
+						<button class="btn btn-primary" ng-disabled="!habilitaBotaoMusicaForm(musicaForm.nome,musicaForm.artista,musicaForm.album,musicaForm.lancamento,musicaForm.duracao)" ng-click="addMusica(musicaForm)">Adicionar Música</button>
+					</form>		
+					
+					<div ng-controller="playlists-ctrl">
+						<table name="playlistTable" ng-show="playlists.length > 0" class="table">
+							<tr class="cabecalho">
+				                <th>Nome da Playlist:</th>
+				                <th>Músicas:</th>
+				            </tr>
+				            <tr ng-repeat="playlist in playlists">
+				                <td>
+				                	<ul>
+				                		<li ng-click="removerPlaylist(playlist.nome)">{{playlist.nome}}</li>
+				                	</ul>
+				                </td>
+				                <td>
+				                	<ul ng-repeat="musica in playlist.tracklist">
+				                		<li ng-click="removerMusica(musica, playlist.nome)">{{musica}}</li>
+				                	</ul>
+			                	</td> 
+				            </tr>
+				            <tr>
+				            	<td>
+				            		<h4>Ao clicar no nome da música/playlist, o mesmo será apagado.</h4>
+				            	</td>
+				            	<td></td>
+				            </tr>
+				         </table>
+				         
+						<form name="playlistForm" class="form">
+							<h3>Personalize suas Playlists:</h3>
+							<h4 ng-show="!playlistForm.musica">O botão só será habilitado com uma música já cadastrada</h4> 
+							<h4 ng-show="!playlistForm.nome">O nome de playlist não deve ser vazio.</h4>
+							<select class="form-control" ng-model="playlistForm.musica">
+				                <option value="">Selecione uma música</option>
+				                <option ng-repeat="musica in musicas">{{musica.nome}}</option>
+				            </select>
+							<input class="form-control" type="text" ng-model="playlistForm.nome" placeholder="Insira o nome da playlist">
+							<button class="btn btn-primary" ng-disabled="!playlistForm.nome" ng-click="addMusicaPlaylist(playlistForm)">Adicionar Música</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
