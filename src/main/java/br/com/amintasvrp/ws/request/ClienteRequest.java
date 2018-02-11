@@ -1,14 +1,12 @@
 package br.com.amintasvrp.ws.request;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
 public class ClienteRequest {
 	
 	@Id
-	@GeneratedValue
 	private String email;
 	private String senha;
 	private String nome;
