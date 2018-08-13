@@ -1,2 +1,3 @@
 # Labs_SI_I
-Jukebox full-stack para a cadeira de Sistemas de Informação I
+
+Full-Stack Jukebox resulting from the discipline of Information Systems I.
