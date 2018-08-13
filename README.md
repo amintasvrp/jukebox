@@ -1,3 +1,3 @@
-# Labs_SI_I
+# Jukebox_SI
 
 Full-Stack Jukebox resulting from the discipline of Information Systems I.
