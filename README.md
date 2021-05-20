@@ -1,4 +1,4 @@
-# Jukebox SP
+# Jukebox
 Full-Stack Jukebox developed during the discipline of Software Project.
 
 ## Getting Started
